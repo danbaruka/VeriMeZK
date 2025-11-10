@@ -1,0 +1,47 @@
+{
+    "name": "verime-zk",
+    "version": "0.1.0",
+    "description": "Zero-Knowledge Identity Proof Toolkit for Browser Environments",
+    "main": "dist/index.js",
+    "module": "dist/index.esm.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist",
+        "README.md",
+        "LICENSE.md"
+    ],
+    "scripts": {
+        "build": "echo 'Build script - implement with your bundler'",
+        "test": "echo 'Test script - implement with your test runner'",
+        "lint": "echo 'Lint script - implement with your linter'",
+        "lint:fix": "npm run lint -- --fix",
+        "prepublishOnly": "npm run build && npm test"
+    },
+    "keywords": [
+        "zero-knowledge",
+        "zk-proof",
+        "identity",
+        "verification",
+        "privacy",
+        "midnight",
+        "halo2",
+        "mrz",
+        "passport",
+        "kyc"
+    ],
+    "author": "Your Name <your.email@example.com>",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/your-org/verime-zk.git"
+    },
+    "bugs": {
+        "url": "https://github.com/your-org/verime-zk/issues"
+    },
+    "homepage": "https://github.com/your-org/verime-zk#readme",
+    "engines": {
+        "node": ">=18.0.0"
+    },
+    "devDependencies": {},
+    "dependencies": {}
+}
