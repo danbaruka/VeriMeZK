@@ -1,6 +1,6 @@
 ---
 name: Documentation
-description: Documentation improvement or request
+about: Documentation improvement or request
 title: "[DOC] "
 labels: ["documentation"]
 assignees: []
