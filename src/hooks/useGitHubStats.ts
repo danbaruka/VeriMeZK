@@ -4,6 +4,7 @@ import config from '@/config';
 interface GitHubStats {
   forks: number;
   commits: number;
+  issues: number;
   stars?: number;
 }
 
@@ -53,6 +54,44 @@ export function useGitHubStats(options?: UseGitHubStatsOptions): {
         
         const repoData = await repoResponse.json();
 
+        // Fetch open issues count (excluding pull requests)
+        let issuesCount = 0;
+        try {
+          const issuesResponse = await fetch(
+            `https://api.github.com/repos/${owner}/${repo}/issues?state=open&per_page=1`,
+            {
+              headers: {
+                Accept: 'application/vnd.github.v3+json',
+              },
+            }
+          );
+          
+          if (issuesResponse.ok) {
+            const linkHeader = issuesResponse.headers.get('Link');
+            if (linkHeader) {
+              // Extract total count from Link header pagination
+              const lastPageMatch = linkHeader.match(/page=(\d+)>; rel="last"/);
+              if (lastPageMatch) {
+                issuesCount = parseInt(lastPageMatch[1], 10);
+              } else {
+                // Fallback: count issues from response (excluding PRs)
+                const issuesData = await issuesResponse.json();
+                issuesCount = Array.isArray(issuesData) 
+                  ? issuesData.filter((issue: any) => !issue.pull_request).length 
+                  : 0;
+              }
+            } else {
+              // No pagination, count from response
+              const issuesData = await issuesResponse.json();
+              issuesCount = Array.isArray(issuesData) 
+                ? issuesData.filter((issue: any) => !issue.pull_request).length 
+                : 0;
+            }
+          }
+        } catch (issueError) {
+          console.warn('Failed to fetch issues count:', issueError);
+        }
+
         // For commits, fetch from default branch
         let commitsCount = 0;
         try {
@@ -87,12 +126,13 @@ export function useGitHubStats(options?: UseGitHubStatsOptions): {
         setStats({
           forks: repoData.forks_count || 0,
           commits: commitsCount,
+          issues: issuesCount,
           stars: repoData.stargazers_count || 0,
         });
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to fetch GitHub stats');
         // Set default values on error
-        setStats({ forks: 0, commits: 0 });
+        setStats({ forks: 0, commits: 0, issues: 0 });
       } finally {
         setLoading(false);
       }

@@ -1,8 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import config from '@/config';
+import { useAppVersion } from '@/hooks/useAppVersion';
 
 export function Footer() {
+  const { version } = useAppVersion();
+
   return (
     <footer className="border-t border-black/10 dark:border-white/10 bg-gray-light dark:bg-gray-darker">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -28,7 +31,7 @@ export function Footer() {
             rel="noopener noreferrer"
             className="text-black dark:text-white hover:underline font-medium transition-colors"
           >
-            Uptodate Develoeprs
+            Uptodate Developers
           </a>
           <span className="mx-2">•</span>
           <span>Powered by </span>
@@ -40,6 +43,8 @@ export function Footer() {
           >
             Midnight
           </a>
+          <span className="mx-2">•</span>
+          <span className="text-black/50 dark:text-white/50">v{version}</span>
         </motion.div>
       </div>
     </footer>
