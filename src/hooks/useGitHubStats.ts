@@ -55,10 +55,11 @@ export function useGitHubStats(options?: UseGitHubStatsOptions): {
         const repoData = await repoResponse.json();
 
         // Fetch open issues count (excluding pull requests)
+        // Use GitHub Search API to get only issues, not PRs
         let issuesCount = 0;
         try {
           const issuesResponse = await fetch(
-            `https://api.github.com/repos/${owner}/${repo}/issues?state=open&per_page=1`,
+            `https://api.github.com/search/issues?q=repo:${owner}/${repo}+type:issue+state:open`,
             {
               headers: {
                 Accept: 'application/vnd.github.v3+json',
@@ -67,29 +68,33 @@ export function useGitHubStats(options?: UseGitHubStatsOptions): {
           );
           
           if (issuesResponse.ok) {
-            const linkHeader = issuesResponse.headers.get('Link');
-            if (linkHeader) {
-              // Extract total count from Link header pagination
-              const lastPageMatch = linkHeader.match(/page=(\d+)>; rel="last"/);
-              if (lastPageMatch) {
-                issuesCount = parseInt(lastPageMatch[1], 10);
-              } else {
-                // Fallback: count issues from response (excluding PRs)
-                const issuesData = await issuesResponse.json();
-                issuesCount = Array.isArray(issuesData) 
-                  ? issuesData.filter((issue: any) => !issue.pull_request).length 
-                  : 0;
+            const issuesData = await issuesResponse.json();
+            issuesCount = issuesData.total_count || 0;
+          } else {
+            // Fallback: use repo open_issues_count and try to subtract PRs
+            // This is less accurate but better than nothing
+            const prsResponse = await fetch(
+              `https://api.github.com/search/issues?q=repo:${owner}/${repo}+type:pr+state:open`,
+              {
+                headers: {
+                  Accept: 'application/vnd.github.v3+json',
+                },
               }
+            );
+            
+            if (prsResponse.ok) {
+              const prsData = await prsResponse.json();
+              const prsCount = prsData.total_count || 0;
+              issuesCount = Math.max(0, (repoData.open_issues_count || 0) - prsCount);
             } else {
-              // No pagination, count from response
-              const issuesData = await issuesResponse.json();
-              issuesCount = Array.isArray(issuesData) 
-                ? issuesData.filter((issue: any) => !issue.pull_request).length 
-                : 0;
+              // Last resort: use open_issues_count (includes PRs, but better than 0)
+              issuesCount = repoData.open_issues_count || 0;
             }
           }
         } catch (issueError) {
           console.warn('Failed to fetch issues count:', issueError);
+          // Fallback to repo's open_issues_count
+          issuesCount = repoData.open_issues_count || 0;
         }
 
         // For commits, fetch from default branch
