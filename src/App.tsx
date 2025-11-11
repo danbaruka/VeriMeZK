@@ -3,12 +3,14 @@ import { MeshProvider } from '@meshsdk/react';
 import '@meshsdk/react/styles.css';
 import { ThemeProvider } from '@/components/shared/ThemeProvider';
 import { VerificationProvider, useVerification } from '@/contexts/VerificationContext';
+import { useWalletConnection } from '@/hooks/useWalletConnection';
 import { ConnectWallet } from '@/components/wallet/ConnectWallet';
 import { DocumentScanner } from '@/components/scan/DocumentScanner';
 import { FaceVerification } from '@/components/scan/FaceVerification';
 import { ProofGenerator } from '@/components/proof/ProofGenerator';
 import { TransactionSigner } from '@/components/proof/TransactionSigner';
 import { Header } from '@/components/shared/Header';
+import { Footer } from '@/components/shared/Footer';
 import { motion } from 'framer-motion';
 
 interface ErrorBoundaryState {
@@ -61,12 +63,77 @@ class ErrorBoundary extends Component<
 
 function VerificationFlow() {
   const { state } = useVerification();
+  const { connected } = useWalletConnection();
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  
+  // Check if wallet is connected - use connected status directly (address might not be available immediately)
+  const isWalletConnected = connected || !!state.walletAddress;
+
+  // Fix aria-hidden accessibility issue
+  // Prevents aria-hidden from being set on elements that contain focusable children
+  React.useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'aria-hidden') {
+          const target = mutation.target as HTMLElement;
+          
+          // Only fix if aria-hidden is being set to true
+          if (target.getAttribute('aria-hidden') !== 'true') return;
+          
+          // Skip if it's a backdrop/overlay (these should be aria-hidden)
+          if (target.classList.contains('backdrop-blur-sm') || 
+              target.classList.contains('bg-black') ||
+              target.classList.contains('bg-black/50')) {
+            return;
+          }
+          
+          // Check if the element or its immediate children contain focusable elements
+          const hasFocusableElements = Array.from(target.querySelectorAll(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          )).some((el) => {
+            // Check if the focusable element is actually visible and not in a modal overlay
+            const rect = el.getBoundingClientRect();
+            return rect.width > 0 && rect.height > 0;
+          });
+          
+          // If aria-hidden is set but element has visible focusable children, remove it
+          if (hasFocusableElements) {
+            // Use requestAnimationFrame to avoid interfering with React's rendering
+            requestAnimationFrame(() => {
+              if (target.getAttribute('aria-hidden') === 'true') {
+                target.removeAttribute('aria-hidden');
+              }
+            });
+          }
+        }
+      });
+    });
+
+    observer.observe(container, {
+      attributes: true,
+      attributeFilter: ['aria-hidden'],
+      subtree: true,
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   const renderStep = () => {
+    // If wallet is connected, don't show ConnectWallet component - it's shown in header
+    // Only show ConnectWallet if wallet is not connected
+    if (!isWalletConnected && (state.step === 'idle' || state.step === 'connected')) {
+      return <ConnectWallet />;
+    }
+    
+    // If wallet is connected but step is still 'idle' or 'connected', show nothing or next step
+    if (isWalletConnected && (state.step === 'idle' || state.step === 'connected')) {
+      return null; // Wallet button is in header, no need to show card
+    }
+    
     switch (state.step) {
-      case 'idle':
-      case 'connected':
-        return <ConnectWallet />;
       case 'scanning':
         return <DocumentScanner />;
       case 'verifying':
@@ -78,14 +145,18 @@ function VerificationFlow() {
       case 'complete':
         return <TransactionSigner />;
       default:
-        return <ConnectWallet />;
+        // Default: show ConnectWallet only if not connected
+        return isWalletConnected ? null : <ConnectWallet />;
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-light dark:bg-gray-darker">
+    <div 
+      ref={containerRef}
+      className="min-h-screen bg-gray-light dark:bg-gray-darker flex flex-col"
+    >
       <Header />
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16 flex-1">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -95,6 +166,7 @@ function VerificationFlow() {
           {renderStep()}
         </motion.div>
       </main>
+      <Footer />
     </div>
   );
 }
