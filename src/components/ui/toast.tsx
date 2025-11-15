@@ -82,34 +82,15 @@ interface ToastContainerProps {
 }
 
 export function ToastContainer({ toasts, onClose }: ToastContainerProps) {
-  const hasToasts = toasts.length > 0;
-
   return (
-    <>
-      {/* Backdrop Blur */}
-      <AnimatePresence>
-        {hasToasts && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 bg-black/10 dark:bg-black/30 backdrop-blur-sm z-40"
-            aria-hidden="true"
-          />
-        )}
+    <div className="fixed top-20 right-4 z-50 flex flex-col gap-2 max-w-md w-full pointer-events-none">
+      <AnimatePresence mode="popLayout">
+        {toasts.map(toast => (
+          <div key={toast.id} className="pointer-events-auto">
+            <ToastItem toast={toast} onClose={onClose} />
+          </div>
+        ))}
       </AnimatePresence>
-
-      {/* Toast Messages */}
-      <div className="fixed top-20 right-4 z-50 flex flex-col gap-2 max-w-md w-full pointer-events-none">
-        <AnimatePresence mode="popLayout">
-          {toasts.map(toast => (
-            <div key={toast.id} className="pointer-events-auto">
-              <ToastItem toast={toast} onClose={onClose} />
-            </div>
-          ))}
-        </AnimatePresence>
-      </div>
-    </>
+    </div>
   );
 }
