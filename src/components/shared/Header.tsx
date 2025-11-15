@@ -18,7 +18,7 @@ export function Header() {
   // Copy address to clipboard
   const handleCopyAddress = async () => {
     if (!address) return;
-    
+
     try {
       await navigator.clipboard.writeText(address);
       setCopied(true);
@@ -69,7 +69,7 @@ export function Header() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-14 sm:h-16">
           <motion.a
-            href="#"
+            href="/"
             className="flex items-center gap-2 sm:gap-3 text-lg sm:text-xl font-bold text-black dark:text-white touch-manipulation"
             aria-label="VeriMeZK Home"
             whileHover={{ scale: 1.05 }}
@@ -116,11 +116,17 @@ export function Header() {
                       >
                         <div className="space-y-3">
                           <div>
-                            <p className="text-xs text-black/70 dark:text-white/60 mb-1 font-medium">Wallet</p>
-                            <p className="text-sm font-semibold text-black dark:text-white">{name || 'Lace'}</p>
+                            <p className="text-xs text-black/70 dark:text-white/60 mb-1 font-medium">
+                              Wallet
+                            </p>
+                            <p className="text-sm font-semibold text-black dark:text-white">
+                              {name || 'Lace'}
+                            </p>
                           </div>
                           <div>
-                            <p className="text-xs text-black/70 dark:text-white/60 mb-1 font-medium">Address</p>
+                            <p className="text-xs text-black/70 dark:text-white/60 mb-1 font-medium">
+                              Address
+                            </p>
                             <div className="flex items-center gap-2">
                               <p className="text-xs font-mono text-black/90 dark:text-white/90 break-all flex-1 bg-black/5 dark:bg-white/5 px-2 py-1 rounded border border-black/10 dark:border-white/10">
                                 {address?.slice(0, 20)}...{address?.slice(-20)}
@@ -134,14 +140,30 @@ export function Header() {
                               >
                                 {copied ? (
                                   <>
-                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <svg
+                                      width="12"
+                                      height="12"
+                                      viewBox="0 0 24 24"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      strokeWidth="2"
+                                    >
                                       <polyline points="20 6 9 17 4 12" />
                                     </svg>
-                                    <span className="text-green-600 dark:text-green-400">Copied!</span>
+                                    <span className="text-green-600 dark:text-green-400">
+                                      Copied!
+                                    </span>
                                   </>
                                 ) : (
                                   <>
-                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <svg
+                                      width="12"
+                                      height="12"
+                                      viewBox="0 0 24 24"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      strokeWidth="2"
+                                    >
                                       <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
                                       <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
                                     </svg>
@@ -152,7 +174,9 @@ export function Header() {
                             </div>
                           </div>
                           <div>
-                            <p className="text-xs text-black/70 dark:text-white/60 mb-1 font-medium">Balance</p>
+                            <p className="text-xs text-black/70 dark:text-white/60 mb-1 font-medium">
+                              Balance
+                            </p>
                             <p className="text-sm font-semibold text-black dark:text-white">
                               {lovelace ? (Number(lovelace) / 1000000).toFixed(2) : '0.00'} ADA
                             </p>
@@ -177,6 +201,33 @@ export function Header() {
                 </motion.div>
               )}
             </AnimatePresence>
+
+            {/* Settings Link */}
+            <motion.a
+              href="/settings"
+              className="flex items-center gap-2 glass-light rounded-lg px-3 py-1.5 border border-black/10 dark:border-white/10 hover:border-black/20 dark:hover:border-white/20 transition-all touch-manipulation"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
+              title="Settings"
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="text-black dark:text-white"
+              >
+                <circle cx="12" cy="12" r="3" />
+                <path d="M12 1v6m0 6v6m5.66-13a10 10 0 0 1 0 14M6.34 7a10 10 0 0 0 0 14M20 12h-6M4 12h6" />
+              </svg>
+              <span className="hidden sm:inline text-sm font-medium text-black dark:text-white">
+                Settings
+              </span>
+            </motion.a>
 
             {/* Documentation Link */}
             <motion.a
@@ -234,7 +285,14 @@ export function Header() {
               {!loading && stats && (
                 <div className="flex items-center gap-2 text-xs text-black/60 dark:text-white/60">
                   <span className="flex items-center gap-1">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
                       <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                       <circle cx="9" cy="7" r="4" />
                       <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
@@ -243,14 +301,28 @@ export function Header() {
                     {stats.forks}
                   </span>
                   <span className="flex items-center gap-1">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
                       <circle cx="12" cy="12" r="10" />
                       <path d="M12 6v6l4 2" />
                     </svg>
                     {stats.issues}
                   </span>
                   <span className="flex items-center gap-1">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
                       <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
                     </svg>
                     {stats.commits > 0 ? (stats.commits >= 100 ? '100+' : stats.commits) : '—'}
@@ -266,4 +338,3 @@ export function Header() {
     </header>
   );
 }
-

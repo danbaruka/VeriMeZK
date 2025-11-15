@@ -11,6 +11,7 @@ import { MobileCapture } from '@/components/scan/MobileCapture';
 import { Header } from '@/components/shared/Header';
 import { Footer } from '@/components/shared/Footer';
 import NewProofPage from '@/pages/NewProofPage';
+import Settings from '@/pages/Settings';
 import { motion } from 'framer-motion';
 
 interface ErrorBoundaryState {
@@ -18,10 +19,7 @@ interface ErrorBoundaryState {
   error: Error | null;
 }
 
-class ErrorBoundary extends Component<
-  { children: ReactNode },
-  ErrorBoundaryState
-> {
+class ErrorBoundary extends Component<{ children: ReactNode }, ErrorBoundaryState> {
   constructor(props: { children: ReactNode }) {
     super(props);
     this.state = { hasError: false, error: null };
@@ -65,7 +63,7 @@ function AppContent() {
   const { state, setStep } = useVerification();
   const { connected } = useWalletConnection();
   const containerRef = React.useRef<HTMLDivElement>(null);
-  
+
   // Check if wallet is connected - use connected status directly (address might not be available immediately)
   const isWalletConnected = connected || !!state.walletAddress;
 
@@ -75,30 +73,34 @@ function AppContent() {
     const container = containerRef.current;
     if (!container) return;
 
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
+    const observer = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
         if (mutation.type === 'attributes' && mutation.attributeName === 'aria-hidden') {
           const target = mutation.target as HTMLElement;
-          
+
           // Only fix if aria-hidden is being set to true
           if (target.getAttribute('aria-hidden') !== 'true') return;
-          
+
           // Skip if it's a backdrop/overlay (these should be aria-hidden)
-          if (target.classList.contains('backdrop-blur-sm') || 
-              target.classList.contains('bg-black') ||
-              target.classList.contains('bg-black/50')) {
+          if (
+            target.classList.contains('backdrop-blur-sm') ||
+            target.classList.contains('bg-black') ||
+            target.classList.contains('bg-black/50')
+          ) {
             return;
           }
-          
+
           // Check if the element or its immediate children contain focusable elements
-          const hasFocusableElements = Array.from(target.querySelectorAll(
-            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-          )).some((el) => {
+          const hasFocusableElements = Array.from(
+            target.querySelectorAll(
+              'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            )
+          ).some(el => {
             // Check if the focusable element is actually visible and not in a modal overlay
             const rect = el.getBoundingClientRect();
             return rect.width > 0 && rect.height > 0;
           });
-          
+
           // If aria-hidden is set but element has visible focusable children, remove it
           if (hasFocusableElements) {
             // Use requestAnimationFrame to avoid interfering with React's rendering
@@ -126,12 +128,12 @@ function AppContent() {
     if (!isWalletConnected && (state.step === 'idle' || state.step === 'connected')) {
       return <ConnectWallet />;
     }
-    
+
     // If wallet is connected and step is idle/connected, show dashboard as main page
     if (isWalletConnected && (state.step === 'idle' || state.step === 'connected')) {
       return <VerificationDashboard />;
     }
-    
+
     // Show new verification flow for all verification steps
     if (isWalletConnected && state.step !== 'idle' && state.step !== 'connected') {
       return (
@@ -142,13 +144,13 @@ function AppContent() {
         />
       );
     }
-    
+
     // Default: show ConnectWallet if not connected, dashboard if connected
     return isWalletConnected ? <VerificationDashboard /> : <ConnectWallet />;
   };
 
   return (
-    <div 
+    <div
       ref={containerRef}
       className="min-h-screen bg-gray-light dark:bg-gray-darker flex flex-col"
     >
@@ -158,7 +160,11 @@ function AppContent() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className={isWalletConnected && (state.step === 'idle' || state.step === 'connected') ? 'max-w-7xl mx-auto' : 'max-w-2xl mx-auto'}
+          className={
+            isWalletConnected && (state.step === 'idle' || state.step === 'connected')
+              ? 'max-w-7xl mx-auto'
+              : 'max-w-2xl mx-auto'
+          }
         >
           {renderStep()}
         </motion.div>
@@ -171,9 +177,12 @@ function AppContent() {
 function App() {
   // Check if we're on the mobile capture page
   const isMobilePage = typeof window !== 'undefined' && window.location.pathname === '/mobile';
-  
+
   // Check if we're on the new proof page
   const isNewProofPage = typeof window !== 'undefined' && window.location.pathname === '/new-proof';
+
+  // Check if we're on the settings page
+  const isSettingsPage = typeof window !== 'undefined' && window.location.pathname === '/settings';
 
   if (isMobilePage) {
     return (
@@ -199,6 +208,20 @@ function App() {
     );
   }
 
+  if (isSettingsPage) {
+    return (
+      <ErrorBoundary>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+          <MeshProvider>
+            <VerificationProvider>
+              <Settings />
+            </VerificationProvider>
+          </MeshProvider>
+        </ThemeProvider>
+      </ErrorBoundary>
+    );
+  }
+
   return (
     <ErrorBoundary>
       <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
@@ -213,4 +236,3 @@ function App() {
 }
 
 export default App;
-
