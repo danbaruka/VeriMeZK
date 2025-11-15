@@ -13,8 +13,8 @@ const DEFAULT_SETTINGS: LanguageSettings = {
 const STORAGE_KEY = 'language_settings';
 
 export const SUPPORTED_LANGUAGES = [
-  { code: 'en', name: 'English', flag: '🇺🇸' },
-  { code: 'fr', name: 'Français', flag: '🇫🇷' },
+  { code: 'en', name: 'English', flag: '🇺🇸', available: true },
+  { code: 'fr', name: 'Français', flag: '🇫🇷', available: false },
 ] as const;
 
 export const DATE_FORMATS = [

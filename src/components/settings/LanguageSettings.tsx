@@ -38,16 +38,26 @@ export function LanguageSettings({ onChangesMade }: SettingsSectionProps) {
               {SUPPORTED_LANGUAGES.map(lang => (
                 <button
                   key={lang.code}
-                  onClick={() => handleLanguageChange(lang.code)}
+                  onClick={() => lang.available && handleLanguageChange(lang.code)}
+                  disabled={!lang.available}
                   className={`flex items-center gap-3 p-4 rounded-lg border-2 transition-all ${
                     settings.language === lang.code
                       ? 'border-black dark:border-white bg-black/5 dark:bg-white/5'
-                      : 'border-black/20 dark:border-white/20 hover:border-black/40 dark:hover:border-white/40'
+                      : lang.available
+                      ? 'border-black/20 dark:border-white/20 hover:border-black/40 dark:hover:border-white/40 cursor-pointer'
+                      : 'border-black/10 dark:border-white/10 opacity-50 cursor-not-allowed'
                   }`}
                 >
                   <span className="text-2xl">{lang.flag}</span>
-                  <span className="font-medium text-black dark:text-white">{lang.name}</span>
-                  {settings.language === lang.code && (
+                  <div className="flex-1 text-left">
+                    <span className="font-medium text-black dark:text-white">{lang.name}</span>
+                    {!lang.available && (
+                      <span className="ml-2 text-xs px-2 py-0.5 bg-black dark:bg-white text-white dark:text-black rounded-full font-semibold">
+                        Soon
+                      </span>
+                    )}
+                  </div>
+                  {settings.language === lang.code && lang.available && (
                     <span className="ml-auto text-green-600 dark:text-green-400">✓</span>
                   )}
                 </button>
