@@ -27,35 +27,35 @@ export function StepIndicator({ steps, currentStep }: StepIndicatorProps) {
           return (
             <React.Fragment key={step.id}>
               <div className="flex flex-col items-center flex-1">
-                {/* Step Circle */}
+                {/* Step Circle - Smaller */}
                 <motion.div
-                  className={`relative w-12 h-12 rounded-full flex items-center justify-center font-semibold text-sm transition-all ${
+                  className={`relative w-10 h-10 rounded-full flex items-center justify-center font-semibold text-xs transition-all ${
                     isCompleted
-                      ? 'bg-green-500 text-white shadow-lg shadow-green-500/50'
+                      ? 'bg-green-500 text-white shadow-md shadow-green-500/30'
                       : isActive
-                      ? 'bg-black dark:bg-white text-white dark:text-black shadow-lg scale-110'
+                      ? 'bg-black dark:bg-white text-white dark:text-black shadow-md scale-105'
                       : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
                   }`}
                   animate={{
-                    scale: isActive ? 1.1 : 1,
+                    scale: isActive ? 1.05 : 1,
                   }}
                   transition={{ duration: 0.2 }}
                 >
                   {isCompleted ? (
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                       <polyline points="20 6 9 17 4 12" />
                     </svg>
                   ) : (
                     <span>{index + 1}</span>
                   )}
                   
-                  {/* Pulse effect for active step */}
+                  {/* Pulse effect for active step - Subtle */}
                   {isActive && (
                     <motion.div
                       className="absolute inset-0 rounded-full bg-black dark:bg-white"
                       animate={{
-                        scale: [1, 1.3, 1],
-                        opacity: [0.5, 0, 0.5],
+                        scale: [1, 1.2, 1],
+                        opacity: [0.3, 0, 0.3],
                       }}
                       transition={{
                         duration: 2,
@@ -66,10 +66,10 @@ export function StepIndicator({ steps, currentStep }: StepIndicatorProps) {
                   )}
                 </motion.div>
 
-                {/* Step Label */}
-                <div className="mt-3 text-center">
+                {/* Step Label - Compact */}
+                <div className="mt-2 text-center">
                   <p
-                    className={`text-xs font-semibold ${
+                    className={`text-xs font-medium ${
                       isActive
                         ? 'text-black dark:text-white'
                         : isCompleted
@@ -80,9 +80,9 @@ export function StepIndicator({ steps, currentStep }: StepIndicatorProps) {
                     {step.title}
                   </p>
                   <p
-                    className={`text-xs mt-0.5 ${
+                    className={`text-[10px] mt-0.5 leading-tight ${
                       isActive
-                        ? 'text-black/70 dark:text-white/70'
+                        ? 'text-black/60 dark:text-white/60'
                         : 'text-gray-400 dark:text-gray-500'
                     }`}
                   >
@@ -91,9 +91,9 @@ export function StepIndicator({ steps, currentStep }: StepIndicatorProps) {
                 </div>
               </div>
 
-              {/* Connector Line */}
+              {/* Connector Line - Thinner */}
               {index < steps.length - 1 && (
-                <div className="flex-1 h-0.5 mx-2 relative">
+                <div className="flex-1 h-0.5 mx-1 sm:mx-2 relative">
                   <div
                     className={`h-full ${
                       isCompleted

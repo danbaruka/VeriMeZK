@@ -60,23 +60,23 @@ export function FaceMatchStep({ passportImage, faceImage, onMatched, error }: Fa
   };
 
   return (
-    <div className="space-y-6">
-      <div className="text-center space-y-2">
-        <h2 className="text-2xl font-bold text-black dark:text-white">
-          Step 3: Face Verification
+    <div className="space-y-4 sm:space-y-5">
+      <div className="text-center space-y-1.5">
+        <h2 className="text-xl sm:text-2xl font-bold text-black dark:text-white">
+          Face Verification
         </h2>
-        <p className="text-black/70 dark:text-white/70">
+        <p className="text-sm text-black/70 dark:text-white/70">
           Comparing your face with the passport photo
         </p>
       </div>
 
       {matching ? (
-        <div className="py-12 space-y-6">
+        <div className="py-6 sm:py-8 space-y-3">
           <div className="flex justify-center">
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-              className="w-20 h-20 border-4 border-black dark:border-white border-t-transparent rounded-full"
+              className="w-16 h-16 border-4 border-black dark:border-white border-t-transparent rounded-full"
             />
           </div>
           <p className="text-center text-black/70 dark:text-white/70">
@@ -87,20 +87,20 @@ export function FaceMatchStep({ passportImage, faceImage, onMatched, error }: Fa
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="space-y-6"
+          className="space-y-4"
         >
           <div className="text-center">
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ type: 'spring', stiffness: 200 }}
-              className={`w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4 ${
+              className={`w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-3 ${
                 score >= 0.7
                   ? 'bg-gradient-to-br from-green-400 to-green-600'
                   : 'bg-gradient-to-br from-red-400 to-red-600'
               }`}
             >
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" className="sm:w-12 sm:h-12">
                 {score >= 0.7 ? (
                   <polyline points="20 6 9 17 4 12" />
                 ) : (
@@ -111,15 +111,15 @@ export function FaceMatchStep({ passportImage, faceImage, onMatched, error }: Fa
                 )}
               </svg>
             </motion.div>
-            <h3 className="text-xl font-bold text-black dark:text-white mb-2">
+            <h3 className="text-lg sm:text-xl font-bold text-black dark:text-white mb-2">
               {score >= 0.7 ? 'Face Match Verified' : 'Face Match Failed'}
             </h3>
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/5 dark:bg-white/5">
-              <span className="text-sm font-semibold text-black dark:text-white">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/5 dark:bg-white/5">
+              <span className="text-xs sm:text-sm font-semibold text-black dark:text-white">
                 Similarity Score:
               </span>
               <span
-                className={`text-lg font-bold ${
+                className={`text-base sm:text-lg font-bold ${
                   score >= 0.7
                     ? 'text-green-600 dark:text-green-400'
                     : 'text-red-600 dark:text-red-400'
@@ -129,7 +129,7 @@ export function FaceMatchStep({ passportImage, faceImage, onMatched, error }: Fa
               </span>
             </div>
             {score < 0.7 && (
-              <p className="mt-4 text-sm text-red-600 dark:text-red-400">
+              <p className="mt-3 text-xs sm:text-sm text-red-600 dark:text-red-400">
                 Minimum required: 70%. Please try again with better lighting.
               </p>
             )}
@@ -141,9 +141,9 @@ export function FaceMatchStep({ passportImage, faceImage, onMatched, error }: Fa
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="glass-strong rounded-lg p-4 border border-red-500/50"
+          className="glass-strong rounded-lg p-3 border border-red-500/50"
         >
-          <p className="text-red-600 dark:text-red-400 text-center">{error}</p>
+          <p className="text-sm text-red-600 dark:text-red-400 text-center">{error}</p>
         </motion.div>
       )}
     </div>

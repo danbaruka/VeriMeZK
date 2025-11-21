@@ -55,11 +55,11 @@ export function FaceCaptureStep({ onCaptured, onRetry, error }: FaceCaptureStepP
 
   if (hasPermission === false) {
     return (
-      <div className="text-center space-y-4 py-8">
-        <p className="text-red-600 dark:text-red-400">
+      <div className="text-center space-y-3 py-6">
+        <p className="text-sm text-red-600 dark:text-red-400">
           Camera access denied. Please enable camera permissions.
         </p>
-        <Button onClick={() => setHasPermission(null)} variant="secondary">
+        <Button onClick={() => setHasPermission(null)} variant="secondary" className="text-sm">
           Try Again
         </Button>
       </div>
@@ -67,12 +67,12 @@ export function FaceCaptureStep({ onCaptured, onRetry, error }: FaceCaptureStepP
   }
 
   return (
-    <div className="space-y-6">
-      <div className="text-center space-y-2">
-        <h2 className="text-2xl font-bold text-black dark:text-white">
-          Step 2: Capture Your Face
+    <div className="space-y-4 sm:space-y-5">
+      <div className="text-center space-y-1.5">
+        <h2 className="text-xl sm:text-2xl font-bold text-black dark:text-white">
+          Capture Your Face
         </h2>
-        <p className="text-black/70 dark:text-white/70">
+        <p className="text-sm text-black/70 dark:text-white/70">
           Look directly at the camera and ensure good lighting
         </p>
       </div>
@@ -109,14 +109,14 @@ export function FaceCaptureStep({ onCaptured, onRetry, error }: FaceCaptureStepP
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="bg-white dark:bg-black rounded-xl p-6 text-center space-y-4"
+                className="bg-white dark:bg-black rounded-xl p-4 sm:p-5 text-center space-y-3"
               >
                 <motion.div
                   animate={{ rotate: 360 }}
                   transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-                  className="w-12 h-12 border-4 border-black dark:border-white border-t-transparent rounded-full mx-auto"
+                  className="w-10 h-10 sm:w-12 sm:h-12 border-4 border-black dark:border-white border-t-transparent rounded-full mx-auto"
                 />
-                <p className="text-black dark:text-white font-semibold">Capturing...</p>
+                <p className="text-sm sm:text-base text-black dark:text-white font-semibold">Capturing...</p>
               </motion.div>
             </div>
           )}
@@ -127,17 +127,17 @@ export function FaceCaptureStep({ onCaptured, onRetry, error }: FaceCaptureStepP
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="glass-strong rounded-lg p-4 border border-red-500/50"
+          className="glass-strong rounded-lg p-3 border border-red-500/50"
         >
-          <p className="text-red-600 dark:text-red-400 text-center">{error}</p>
+          <p className="text-sm text-red-600 dark:text-red-400 text-center">{error}</p>
         </motion.div>
       )}
 
-      <div className="flex gap-3">
+      <div className="flex gap-2 sm:gap-3 pt-2">
         <Button
           onClick={() => setUsePhone(true)}
           variant="secondary"
-          className="flex-1"
+          className="flex-1 text-sm"
           disabled={capturing}
         >
           Use Phone Camera
@@ -146,7 +146,7 @@ export function FaceCaptureStep({ onCaptured, onRetry, error }: FaceCaptureStepP
           onClick={captureFace}
           isLoading={capturing}
           disabled={capturing || !hasPermission}
-          className="flex-1"
+          className="flex-1 text-sm"
         >
           {capturing ? 'Capturing...' : 'Capture Face'}
         </Button>

@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useWalletConnection } from '@/hooks/useWalletConnection';
 import { useVerification } from '@/contexts/VerificationContext';
@@ -121,14 +122,17 @@ export function VerificationDashboard() {
 
         <div className="flex items-center gap-3">
           {/* New Verification Button */}
-          <motion.a
-            href="/new-proof"
-            className="px-4 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg font-semibold hover:opacity-90 transition-all text-sm"
+          <motion.div
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            New Verification
-          </motion.a>
+            <Link
+              to="/new-proof"
+              className="px-4 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg font-semibold hover:opacity-90 transition-all text-sm inline-block"
+            >
+              New Verification
+            </Link>
+          </motion.div>
 
           {/* View Mode Toggle */}
           <div className="flex items-center gap-1 glass-light rounded-lg p-1 border border-black/10 dark:border-white/10">

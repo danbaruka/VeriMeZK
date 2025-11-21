@@ -22,6 +22,7 @@ export type VerificationStepType =
 
 interface VerificationFlowProps {
   onComplete?: () => void;
+  onCancel?: () => void;
 }
 
 const steps = [
@@ -33,7 +34,7 @@ const steps = [
   { id: 'transaction', title: 'Submit', description: 'Submit on-chain' },
 ] as const;
 
-export function VerificationFlow({ onComplete }: VerificationFlowProps) {
+export function VerificationFlow({ onComplete, onCancel }: VerificationFlowProps) {
   const { state, setMRZData, setStep } = useVerification();
   const [currentStep, setCurrentStep] = useState<VerificationStepType>('document');
   const [documentData, setDocumentData] = useState<MRZData | null>(null);
@@ -109,6 +110,7 @@ export function VerificationFlow({ onComplete }: VerificationFlowProps) {
           <DocumentCaptureStep
             onCaptured={handleDocumentCaptured}
             onRetry={handleDocumentRetry}
+            onCancel={onCancel}
             error={error}
           />
         );
@@ -160,23 +162,23 @@ export function VerificationFlow({ onComplete }: VerificationFlowProps) {
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="text-center space-y-6 py-12"
+            className="text-center space-y-4 py-8 sm:py-10"
           >
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ type: 'spring', stiffness: 200, damping: 15 }}
-              className="w-24 h-24 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto shadow-2xl"
+              className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto shadow-lg"
             >
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" className="sm:w-12 sm:h-12">
                 <polyline points="20 6 9 17 4 12" />
               </svg>
             </motion.div>
             <div>
-              <h2 className="text-3xl font-bold text-black dark:text-white mb-2">
+              <h2 className="text-2xl sm:text-3xl font-bold text-black dark:text-white mb-2">
                 Verification Complete!
               </h2>
-              <p className="text-black/70 dark:text-white/70">
+              <p className="text-sm sm:text-base text-black/70 dark:text-white/70">
                 Your identity has been verified and submitted to the blockchain.
               </p>
             </div>
@@ -188,16 +190,16 @@ export function VerificationFlow({ onComplete }: VerificationFlowProps) {
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto">
-      {/* Step Indicator */}
-      <div className="mb-8">
+    <div className="w-full max-w-4xl mx-auto">
+      {/* Step Indicator - Compact */}
+      <div className="mb-4 sm:mb-5">
         <StepIndicator
           steps={steps}
           currentStep={currentStep}
         />
       </div>
 
-      {/* Main Content */}
+      {/* Main Content - Reduced padding */}
       <Card>
         <AnimatePresence mode="wait">
           <motion.div

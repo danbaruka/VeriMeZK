@@ -43,7 +43,7 @@ function NewProofPage() {
             <VerificationFlow
               onComplete={() => {
                 // Redirect to dashboard after completion
-                window.location.href = '/';
+                // Redirect handled by VerificationPage component
               }}
             />
           )}

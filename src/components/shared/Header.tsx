@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { ThemeSwitcher } from './ThemeSwitcher';
 import { IconSquares } from './IconSquares';
 import { useGitHubStats } from '@/hooks/useGitHubStats';
@@ -9,12 +10,18 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { MdSettings } from 'react-icons/md';
 
 export function Header() {
+  const location = useLocation();
   const { stats, loading } = useGitHubStats();
   const { isLaceConnected, name, address, lovelace } = useWalletDetection();
   const { connected, disconnect } = useWalletConnection();
   const [showWalletDetails, setShowWalletDetails] = useState(false);
   const [copied, setCopied] = useState(false);
   const walletDetailsRef = React.useRef<HTMLDivElement>(null);
+  
+  // Don't show header on mobile capture page
+  if (location.pathname === '/mobile') {
+    return null;
+  }
 
   // Copy address to clipboard
   const handleCopyAddress = async () => {
@@ -69,21 +76,19 @@ export function Header() {
     <header className="fixed top-0 left-0 right-0 z-50 glass-light border-b border-black/10 dark:border-white/10 backdrop-blur-xl safe-area-top">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-14 sm:h-16">
-          <motion.a
-            href="/"
-            onClick={e => {
-              e.preventDefault();
-              window.history.pushState({}, '', '/');
-              window.dispatchEvent(new PopStateEvent('popstate'));
-            }}
-            className="flex items-center gap-2 sm:gap-3 text-lg sm:text-xl font-bold text-black dark:text-white touch-manipulation"
-            aria-label="VeriMeZK Home"
+          <motion.div
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <IconSquares size={5} animated className="w-1.5 h-auto sm:w-2 sm:h-auto" />
-            VeriMeZK
-          </motion.a>
+            <Link
+              to="/"
+              className="flex items-center gap-2 sm:gap-3 text-lg sm:text-xl font-bold text-black dark:text-white touch-manipulation"
+              aria-label="VeriMeZK Home"
+            >
+              <IconSquares size={5} animated className="w-1.5 h-auto sm:w-2 sm:h-auto" />
+              VeriMeZK
+            </Link>
+          </motion.div>
 
           <div className="flex items-center gap-3 sm:gap-4">
             {/* Wallet Connection Status */}
@@ -311,20 +316,18 @@ export function Header() {
             </motion.a>
 
             {/* Settings Link */}
-            <motion.a
-              href="/settings"
-              onClick={e => {
-                e.preventDefault();
-                window.history.pushState({}, '', '/settings');
-                window.dispatchEvent(new PopStateEvent('popstate'));
-              }}
-              className="flex items-center justify-center glass-light rounded-lg p-2 border border-black/10 dark:border-white/10 hover:border-black/20 dark:hover:border-white/20 transition-all touch-manipulation"
+            <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.98 }}
-              title="Settings"
             >
-              <MdSettings className="text-xl text-black dark:text-white" />
-            </motion.a>
+              <Link
+                to="/settings"
+                className="flex items-center justify-center glass-light rounded-lg p-2 border border-black/10 dark:border-white/10 hover:border-black/20 dark:hover:border-white/20 transition-all touch-manipulation"
+                title="Settings"
+              >
+                <MdSettings className="text-xl text-black dark:text-white" />
+              </Link>
+            </motion.div>
 
             <ThemeSwitcher />
           </div>

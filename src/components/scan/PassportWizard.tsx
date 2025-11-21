@@ -78,7 +78,11 @@ const normalizeValidation = (validation: any) => {
   };
 };
 
-export function PassportWizard() {
+interface PassportWizardProps {
+  onCancel?: () => void;
+}
+
+export function PassportWizard({ onCancel }: PassportWizardProps = {}) {
   const webcamRef = useRef<Webcam>(null);
   const [usePhone, setUsePhone] = useState(false);
   const [scanning, setScanning] = useState(false);
@@ -537,7 +541,23 @@ export function PassportWizard() {
   };
 
   const handleCancel = () => {
+    // Stop camera
+    stopDesktopCamera();
+    // Reset state
     setStep('idle');
+    setScanning(false);
+    setValidating(false);
+    setError(null);
+    setValidation(null);
+    setScannedData(null);
+    setAllDetected(false);
+    setFullPassportData(null);
+    setCaptureAttempted(false);
+    setCapturedImage(null);
+    // Call parent cancel handler if provided
+    if (onCancel) {
+      onCancel();
+    }
   };
 
   const handleDocumentFromPhone = useCallback((mrzData: MRZData, imageData: string) => {
