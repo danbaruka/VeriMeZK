@@ -2,17 +2,11 @@ import type { SettingsSection } from '@/hooks/useSettingsNavigation';
 import {
   MdPalette,
   MdLanguage,
-  MdLock,
-  MdNotifications,
-  MdAccountBalanceWallet,
   MdImportExport,
   MdDeleteSweep,
 } from 'react-icons/md';
 import { ThemeSettings } from '@/components/settings/ThemeSettings';
 import { LanguageSettings } from '@/components/settings/LanguageSettings';
-import { PrivacySettings } from '@/components/settings/PrivacySettings';
-import { NotificationSettings } from '@/components/settings/NotificationSettings';
-import { WalletSettings } from '@/components/settings/WalletSettings';
 import { ExportImportSettings } from '@/components/settings/ExportImportSettings';
 import { ClearDataSettings } from '@/components/settings/ClearDataSettings';
 
@@ -33,14 +27,6 @@ export interface SectionConfig {
 export const SETTINGS_SECTIONS: SectionConfig[] = [
   { id: 'theme', label: 'Theme', icon: MdPalette, component: ThemeSettings },
   { id: 'language', label: 'Language', icon: MdLanguage, component: LanguageSettings },
-  { id: 'privacy', label: 'Privacy', icon: MdLock, component: PrivacySettings },
-  {
-    id: 'notifications',
-    label: 'Notifications',
-    icon: MdNotifications,
-    component: NotificationSettings,
-  },
-  { id: 'wallet', label: 'Wallet', icon: MdAccountBalanceWallet, component: WalletSettings },
   {
     id: 'export-import',
     label: 'Export/Import',

@@ -3,9 +3,6 @@ import { useState, useCallback } from 'react';
 export type SettingsSection =
   | 'theme'
   | 'language'
-  | 'privacy'
-  | 'notifications'
-  | 'wallet'
   | 'export-import'
   | 'clear-data';
 

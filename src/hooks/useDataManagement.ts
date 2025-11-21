@@ -16,8 +16,6 @@ export function useDataManagement() {
       const settings = {
         theme: localStorage.getItem('theme'),
         language: localStorage.getItem('language'),
-        notifications: localStorage.getItem('notification_settings'),
-        privacy: localStorage.getItem('privacy_settings'),
       };
 
       const exportData: ExportData = {
@@ -78,9 +76,6 @@ export function useDataManagement() {
     const keysToRemove = [
       'theme',
       'language',
-      'notification_settings',
-      'privacy_settings',
-      'wallet',
     ];
     keysToRemove.forEach(key => localStorage.removeItem(key));
   }, []);

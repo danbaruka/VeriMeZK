@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import type { SettingsSection } from '@/hooks/useSettingsNavigation';
-import type { SectionConfig, SettingsSectionProps } from '@/constants/settings';
+import type { SectionConfig } from '@/constants/settings';
 
 interface SettingsContentProps {
   activeSection: SettingsSection;
